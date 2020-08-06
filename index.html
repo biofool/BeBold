@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+     <title>Bold U</title>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.0/slick.min.css" rel="stylesheet" />
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.0/slick-theme.min.css" rel="stylesheet" />
+      <link href="https://transloadit.edgly.net/releases/uppy/v1.4.0/uppy.min.css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+      <script src="https://transloadit.edgly.net/releases/uppy/v1.4.0/uppy.min.js"></script>
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <meta charset="UTF-8">
+      <style>
+         * {
+         box-sizing: border-box;
+         }
+         .header {
+         border: 1px solid red;
+         padding: 15px;
+         }
+         .menu {
+         width: 25%;
+         float: left;
+         padding: 15px;
+         border: 1px solid red;
+         }
+         .main {
+         width: 75%;
+         float: left;
+         padding: 15px;
+         border: 1px solid red;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="header">
+         <h1> Hello, Bold You</h1>
+         <p>Use <em>BeBOLD</em> to distill only the bolded or emphasized text and headings from a source document.</p>
+         <p><em>BookmarkMe!</em> creates a slide show of just the headings and bold text from your document, and presents each set of words as a browsable slide show.
+         </p>
+         <p>Use it to prepare for a speech, an exam, or simply to orient yourself to a long, online document. </p>
+         <em>Did I say BookmarkMe!</em>
+         <p> Play with javascript regex here <a href="https://www.regextester.com/27540"> tags</a> </p>
+         <p>  <a href="file:///Users/kkron/projects/BB_carousel/index.html">Reload</a> BB</p>
+      </div>
+      <div class="menu">
+        <p> Read an htmlfile to extract the bold ideas<p>
+         <input type="file" id="IDeas">
+             <div id="drag-drop-area"></div>
+
+         <hr>
+         <p> Use your bookmarks to save the carousels that you like<p>
+      </div>
+      <div class="main">
+         <h2>Carousel</h2>
+         <div id="carousel1" class="slider slider-nav">
+         </div>
+         <div id="carousel2" class="slider slider-for">
+         </div>
+         <div>
+            <p>============================</p>
+         </div>
+         <h2>Your embolding ideas</h2>
+         <form>
+            <div>
+               <textarea style="width:400px;height: 100px" id="output"></textarea>
+            </div>
+         </form>
+       </div>
+
+
+         <!-- http://peec.biz/githubcallback -->
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.js"></script>
+<script type="text/javascript">
+  var buffer ;   var json_string ;
+  var inputJjs = JSON.stringify(window.location.search) ;
+  var inputJjseUC = encodeURIComponent(JSON.stringify(inputJjs)) ;
+  var inputdUC = decodeURIComponent(inputJjseUC) ;
+
+  console.log(window.location.search) ;
+  var inputFile = document.getElementById("IDeas");
+  var tagsFileDefault = "em|strong|h1" ;
+  var tagsBB = "div" ;
+
+  var baseRegexp = "<("+ tagsFileDefault + ")>" + '(.*?)<\/\\1>' ;
+  var bbRegexp = new RegExp("<("+ tagsBB + ")>" + '(.*?)<\/\\1>', 'g') ;
+  var htmlRegexp = new RegExp(baseRegexp, 'g') ;
+  var seat ;
+  $( document ).ready(function() {
+    // .ready seems superfolous
+  var url = window.location.href;
+  var urlAr = url.split('?');
+  debugger ;
+
+  console.log("urlAr.length", urlAr.length) ;
+     if (urlAr.length > 1) {
+       var seatAR = [], matchAR = [], buffer ;
+       buffer=decodeURIComponent(urlAr[1]) ;
+       while ((matchAR = bbRegexp.exec(buffer))!= null) {
+         console.log(matchAR[2]) ;
+         seatAR.push (matchAR[2]) ;
+        } ;
+       console.log(seatAR.join("\n"));
+       MakeCarousels(seatAR) ;
+
+     }
+  } );
+
+function MakeCarousels(seatARNew) {
+    // seatARNew is array of untagged carousel text
+    var output = document.getElementById("output");
+    var carousel1 = document.getElementById("carousel1");
+    var url = window.location.href;
+    var urlAr = url.split('?');
+    output.textContent = "" ;
+    destroyCarousels() ;
+    // Carousel updates must happen between Destroy and Slick
+    carousel1.innerHTML= "" ;
+    console.log($("#carousel1").innerHTML) ;
+    for (seat of seatARNew) {
+       carousel1.innerHTML +=  "<div>" + seat+ "</div>" ;
+       output.textContent += seat+ "\n" ;
+     }
+     debugger ;
+     if (urlAr.length < 2) {
+       var OldOrigin=  window.location.href ;
+
+       console.log(window.location.href, OldOrigin ,  '?'  , carousel1.innerHTML) ;
+       debugger ;
+
+        window.location.href= OldOrigin + '?' + carousel1.innerHTML ;
+      } else {
+        slickCarousels(carousel1.innerHTML) ;
+   }
+ }
+
+function slickCarousels(NewCarousel) {
+  destroyCarousels() ;
+  carousel1.innerHTML = NewCarousel ;
+  carousel2.innerHTML = NewCarousel ;
+   $('.slider-nav').slick({
+     slidesToShow: 2,
+     slidesToScroll: 1,
+     dots: true,
+     arrows:true,
+     centerMode: true,
+     focusOnSelect: true,
+     asNavFor: '.slider-for'
+   });
+
+   $('.slider-for').slick({
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    fade: true,
+    asNavFor: '.slider-nav'
+     });
+}
+
+function destroyCarousels() {
+  if ($('.slider-nav').hasClass('slick-initialized')) {
+    $('.slider-nav').slick('unslick');
+    $('.slider-for').slick('unslick');
+  }
+}
+
+inputFile.addEventListener("change", function () {
+  if (this.files && this.files[0]) {
+    var myFile = this.files[0];
+    var reader = new FileReader();
+    var matchAR = [] ;
+    var FileseatAR = [] ;
+    reader.addEventListener('load', function (e) {
+
+      while ((matchAR = htmlRegexp.exec(e.target.result))!= null) {
+        console.log(matchAR) ;
+         FileseatAR.push (matchAR[2]) ;
+       } ;
+       output.textContent = FileseatAR.join("\n") ;
+       console.log(FileseatAR.join("\n"));
+       debugger ;
+      MakeCarousels(FileseatAR) ;
+    });
+
+    reader.readAsText(myFile);
+  }
+
+});
+
+ </script>
+     <script>
+      var uppy = Uppy.Core()
+        .use(Uppy.Dashboard, {
+          inline: true,
+          target: '#drag-drop-area'
+        })
+        .use(Uppy.Tus, {endpoint: 'https://peec.biz/BB/upload.php'})
+
+      uppy.on('complete', (result) => {
+        console.log('Upload complete! We’ve uploaded these files:', result.successful)
+      })
+    </script>
+
+   </body>
+</html>
